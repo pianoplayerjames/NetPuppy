@@ -7,36 +7,24 @@ import (
     "net/http"
     "os"
     "strings"
-	"netpuppy/utils"
+	"netsquirrel/utils"
 )
 
 
-var RepositoryURL = "https://raw.githubusercontent.com/pianoplayerjames/netpuppy_plugins/main/"
+var RepositoryURL = "https://raw.githubusercontent.com/pianoplayerjames/netsquirrel_plugins/main/"
 
 func init() {
-    Register("install", &install{})
+    Register("install", &Install{})
 }
 
-// Command interface that all commands must implement.
-type Command interface {
-    Execute(pluginDataChan chan<- string)
+func (h *Install) Description() string {
+    return "Plugin Installer for server admins only."
 }
 
-// Global registry for commands.
-var Commands = make(map[string]Command)
+type Install struct{}
 
-// Register function to add commands to the registry.
-func Register(name string, cmd Command) {
-    if _, exists := Commands[name]; exists {
-        fmt.Printf("Warning: Command '%s' is already registered and will be overwritten.\n", name)
-    }
-    Commands[name] = cmd
-}
-
-type install struct{}
-
-func (r *install) Execute(pluginDataChan chan<- string) {
-    fmt.Println("[Plugin] Type the name of the plugin to install or 'exit' to quit.")
+func (i *Install) Execute(comm Communicator, pluginDataChan chan<- string) {
+    fmt.Println("[Plugin] Type the name of the plugin to Install or 'exit' to quit.")
     scanner := bufio.NewScanner(os.Stdin)
 
     for {
@@ -63,7 +51,7 @@ func (r *install) Execute(pluginDataChan chan<- string) {
             continue
         }
 
-        fmt.Printf(utils.Color("[Plugin] '%s' installed successfully. Please restart netpuppy.\n", utils.Green), fileName)
+        fmt.Printf(utils.Color("[Plugin] '%s' Installed successfully. Please restart netpuppy.\n", utils.Green), fileName)
 
         runCommand := strings.TrimSuffix(fileName, ".go")
         fmt.Printf(utils.Color("You can run the plugin by typing: '%s'\n", utils.Yellow), runCommand)
@@ -79,7 +67,6 @@ func downloadFile(filepath, url string) error {
     }
     defer resp.Body.Close()
 
-    // Check the status code
     if resp.StatusCode == http.StatusBadRequest {
         return fmt.Errorf(utils.Color("received a 400 Bad Request error for URL: %s", utils.Red), url)
     } else if resp.StatusCode >= 400 {

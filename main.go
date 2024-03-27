@@ -1,14 +1,22 @@
 package main
 
 import (
-	// NetPuppy pkgs:
-	"netpuppy/cmd"
-	"netpuppy/cmd/conn"
+    "bufio"
+    "fmt"
+    "os"
+    "strconv"
+    "strings"
+    "netsquirrel/brain"
 )
 
 func main() {
-	// In order to test the connection code w/o creating REAL sockets, Run() handles most of the logic.
-	//....... Define a connection getter and hand it to Run(). This will become the socket:
-	var connection conn.RealConnectionGetter
-	cmd.Run(connection)
+    reader := bufio.NewReader(os.Stdin)
+    fmt.Println("Enter port to start the server:")
+    portInput, _ := reader.ReadString('\n')
+    port, err := strconv.Atoi(strings.TrimSpace(portInput))
+    if err != nil {
+        fmt.Println("Invalid port number. Exiting.")
+        return
+    }
+    brain.RunServer(port)
 }
