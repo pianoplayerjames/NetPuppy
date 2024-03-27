@@ -8,7 +8,12 @@ curl -OL https://golang.org/dl/go1.22.1.linux-amd64.tar.gz
 sha256sum go1.22.1.linux-amd64.tar.gz
 sudo tar -C /usr/local -xvf go1.22.1.linux-amd64.tar.gz
 sudo nano ~/.profile
-export PATH=$PATH:/usr/local/go/bin
+```
+Add line to bottom of file and press ```ctrl + x``` to save
+
+```export PATH=$PATH:/usr/local/go/bin```
+
+```
 source ~/.profile
 git clone https://github.com/pianoplayerjames/netsquirrel
 cd netsquirrel
