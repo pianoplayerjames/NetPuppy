@@ -14,8 +14,7 @@ git clone https://github.com/pianoplayerjames/netsquirrel
 cd netsquirrel
 chmod +x net
 ./net
-`
-
+```
 
 # How to start server
 ```./net```
